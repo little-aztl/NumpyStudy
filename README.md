@@ -241,3 +241,169 @@ array([[   0,   10,   10,    3],
        [   8,   10,   10,   11]])
 ```
 
+---
+
+以下为进阶内容。
+
+## 花式索引
+
+### 使用索引数组进行索引
+
+```python
+>>> a = np.arange(12)**2                       # the first 12 square numbers
+# a: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121]
+>>> i = np.array( [ 1,1,3,8,5 ] )              # an array of indices
+# i: [1, 1, 3, 8, 5]
+>>> a[i]                                       # the elements of a at the positions i
+array([ 1,  1,  9, 64, 25])
+>>>
+>>> j = np.array( [ [ 3, 4], [ 9, 7 ] ] )      # a bidimensional array of indices
+# j: [[3, 4],
+#	  [9, 7]]
+>>> a[j]                                       # the same shape as j
+array([[ 9, 16],
+       [81, 49]])
+```
+
+当`a`数组是多维时，索引数组的元素指代的是`a`的第一维。
+
+```python
+>>> palette = np.array( [ [0,0,0],                # black
+...                       [255,0,0],              # red
+...                       [0,255,0],              # green
+...                       [0,0,255],              # blue
+...                       [255,255,255] ] )       # white
+>>> image = np.array( [ [ 0, 1, 2, 0 ],           # each value corresponds to a color in the palette
+...                     [ 0, 3, 4, 0 ]  ] )
+>>> palette[image]                            # the (2,4,3) color image
+array([[[  0,   0,   0],
+        [255,   0,   0],
+        [  0, 255,   0],
+        [  0,   0,   0]],
+       [[  0,   0,   0],
+        [  0,   0, 255],
+        [255, 255, 255],
+        [  0,   0,   0]]])
+```
+
+同样，我们也可以为多个维度提供索引。每个维度的索引数组必须具有相同的形状。
+
+```python
+>>> a = np.arange(12).reshape(3,4)
+>>> a
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>> i = np.array( [ [0,1],                        # indices for the first dim of a
+...                 [1,2] ] )
+>>> j = np.array( [ [2,1],                        # indices for the second dim
+...                 [3,3] ] )
+>>>
+>>> a[i,j]                                     # i and j must have equal shape
+# 第一个维度按i数组的指示，第二个维度按j数组的指示
+array([[ 2,  5],
+       [ 7, 11]])
+>>>
+>>> a[i,2]
+# 第一维按i数组的指示，第二维全取第2个数
+array([[ 2,  6],
+       [ 6, 10]])
+>>>
+>>> a[:,j]                                     # i.e., a[ : , j]
+# 第一维放在外层循环，里面嵌套什么元素呢？就看j数组指示的第二维来确定。
+array([[[ 2,  1],
+        [ 3,  3]],
+       [[ 6,  5],
+        [ 7,  7]],
+       [[10,  9],
+        [11, 11]]])
+```
+
+还可以将`i`与`j`数组放入列表中进行索引。
+
+```python
+>>> l = [i,j]
+>>> a[l]                                       # equivalent to a[i,j]
+array([[ 2,  5],
+       [ 7, 11]])
+```
+
+可以使用数组索引作为“左值”。
+
+```python
+>>> a = np.arange(5)
+>>> a
+array([0, 1, 2, 3, 4])
+>>> a[[1,3,4]] = 0
+>>> a
+array([0, 0, 2, 0, 0])
+```
+
+### 使用布尔数组进行索引
+
+思想：指定哪些是我们想要的元素
+
+```python
+>>> a = np.arange(12).reshape(3,4)
+>>> b = a > 4
+>>> b                                          # b is a boolean with a's shape
+array([[False, False, False, False],
+       [False,  True,  True,  True],
+       [ True,  True,  True,  True]])
+>>> a[b]                                       # 1d array with the selected elements
+array([ 5,  6,  7,  8,  9, 10, 11])
+```
+
+最简单的情况是bool数组和被索引数组具有相同的大小。
+
+第二种情况更类似于整数索引；对于数组的每个维度，我们给出一个1D布尔数组，选择我们想要的切片。
+
+```python
+>>> a = np.arange(12).reshape(3,4)
+>>> b1 = np.array([False,True,True])             # first dim selection
+>>> b2 = np.array([True,False,True,False])       # second dim selection
+>>>
+>>> a[b1,:]                                   # selecting rows
+array([[ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>>
+>>> a[b1]                                     # same thing
+array([[ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>>
+>>> a[:,b2]                                   # selecting columns
+array([[ 0,  2],
+       [ 4,  6],
+       [ 8, 10]])
+>>>
+>>> a[b1,b2]                                  # a weird thing to do
+array([ 4, 10])
+```
+
+1D布尔数组的长度必须要和被索引数组对应轴的长度一致。
+
+## 线性代数
+
+转置：`a.tranpose()`
+
+取逆：`np.linalg.inv(a)`
+
+单位阵：`np.eye(2)`（二阶单位阵）
+
+矩阵乘法：`j @ j`
+
+迹：`np.trace(u)`
+
+解线性方程组：`np.linalg.solve(a, y)`a为系数矩阵，y为列向量。
+
+特征值：`np.linalg.eig(j)`特征值和特征向量都会给出。
+
+```python
+>>> np.linalg.eig(j)
+(
+ array([ 0.+1.j,  0.-1.j]),
+ array([[ 0.70710678+0.j        ,  0.70710678-0.j        ],
+       [ 0.00000000-0.70710678j,  0.00000000+0.70710678j]])
+)
+```
+
