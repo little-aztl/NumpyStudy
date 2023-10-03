@@ -409,3 +409,39 @@ array([ 4, 10])
 
 svd分解：`np.linalg.svd(a)`返回三个矩阵u, s, v，大小分别为(M, M), (M, N), (N, N)
 
+## 用法积累
+
+###  allclose
+
+`np.allclose(a, b， rtol=1e-05, atol=1e-08)`判断两个数组是否相等，rtol相对误差，atol绝对误差。
+
+### vstack、hstack和column_stack
+
+```python
+np.vstack((a, b)) #竖着叠
+np.hstack((a, b)) #横着摆
+np.column_stack((a, b)) #把两个一维的数组竖着叠
+```
+
+### pad
+
+`np.pad(array, pad_width, mode='constant', **kwargs)`
+
+array表示需要填充的数组
+
+pad_width表示每个轴边缘需要填充的数值数目：`((before_1, after_1), ..., (before_N, after_N))`
+
+mode为填充的模式：
+
++ constant 填充常数
+
+    ```python
+    np.pad(a, (2, 3), 'constant', constant_value = (4, 6))
+    ```
+
+    constant_value与pad_width的大小相同
+
++ edge 填充边缘
+
++ linear_ramp
+
