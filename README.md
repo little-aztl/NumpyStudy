@@ -407,3 +407,5 @@ array([ 4, 10])
 )
 ```
 
+svd分解：`np.linalg.svd(a)`返回三个矩阵u, s, v，大小分别为(M, M), (M, N), (N, N)
+
