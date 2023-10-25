@@ -458,3 +458,88 @@ mode为填充的模式：
 `np.random.randn(d0, d1, d2, ...)`
 
 d0, d1, d2为生成数据的维度。
+
+### 标准差
+
+`numpy.std(a, axis=None, dtype=None, out=None, ddof=0, keepdims=<no value>, *, where=<no value>)`
+
++ a：输入数组
++ axis：整数或者整数的元组
+    + 计算指定轴
+
+### 平均值
+
+`numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>, *, where=<no value>)`
+
+参数完全同上
+
+### 最小值的下标
+
+`numpy.argmin(a, axis=None, out=None, *, keepdims=<no value>)`
+
++ axis：
+    + 如果不设置，那么返回的指标是被扁平化的指标
+    + 否则沿着指定轴求最小值的下标
+
+## SciPy 用法积累
+
+### 卷积
+
+`scipy.ndimage.convolve(input, weights, output=None, mode='reflect', cval=0.0, origin=0)`
+
++ input：输入图像
++ weights：卷积核
++ mode：{‘reflect’, ‘constant’, ‘nearest’, ‘mirror’, ‘wrap’}, optional
+    + ‘reflect’ (d c b a | a b c d | d c b a)
+    + ‘constant’ (k k k k | a b c d | k k k k)
+    + ‘nearest’ (a a a a | a b c d | d d d d)
+    + ‘mirror’ (d c b | a b c d | c b a)
+    + ‘wrap’ (a b c d | a b c d | a b c d)
++ cval：如果 mode 设置成 constant，那么 cval 表示常数具体是多少
+
+### 高斯滤波
+
+`scipy.ndimage.gaussian_filter(input, sigma, order=0, output=None, mode='reflect', cval=0.0, truncate=4.0, *, radius=None, axes=None)`
+
++ input：输入图像
++ sigma：高斯滤波的方差
++ **order**（很重要）：高斯滤波的阶数，阶数为 0 表示和高斯核进行卷积，阶数为正数表示和高斯核对应阶数的导数卷积。
++ mode：同上
++ truncate：和 radius 相对，truncate 设定了高斯滤波截断的标准差
++ radius：高斯核的大小，设定了 radius，就会忽略 truncate
+
+返回：对输入图像进行高斯滤波后的结果
+
+### Sobel 滤波
+
+`scipy.ndimage.sobel(input, axis=-1, output=None, mode='reflect', cval=0.0)`
+
++ axis：输入图像的哪条轴需要被计算，默认为 -1.
++ 其他参数同上。
+
+### 最大值滤波
+
+`scipy.ndimage.maximum_filter(input, size=None, footprint=None, output=None, mode='reflect', cval=0.0, origin=0, *, axes=None)`
+
++ footprint & size：footprint 和 size 至少设定一个
+
+    + size 设定了窗口大小
+
+    + footprint 用 bool 数组规定了取哪些数字。
+
+        > size = (n, m) 和 footprint = np.ones((n, m)) 是等效的。
+
++ 其他参数同上。
+
+### 计算 n 维空间的点的距离
+
+`scipy.spatial.distance.cdist(XA, XB, metric='euclidean', *, out=None, **kwargs)`
+
++ XA：$m_A \times n$ 的数组，表示 $n$ 维空间的一组 $m_A$ 个观测点。
++ XB：$m_B\times n$ 的数组
++ metric：衡量距离的方法，默认为欧几里得距离。
+
+返回值
+
+一个 $m_A \times m_B$ 的距离矩阵。
+
