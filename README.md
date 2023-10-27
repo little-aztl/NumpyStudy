@@ -485,6 +485,50 @@ d0, d1, d2为生成数据的维度。
 
 `a[a > 4] = 0`
 
+### 将函数向量化
+
+将一个作用于普通元素的函数，转变成可以作用于一个 numpy.array 的函数。
+
+`class numpy.vectorize(pyfunc=np._NoValue, otypes=None, doc=None, excluded=None, cache=False, signature=None)`
+
++ pyfunc: 原函数
+
++ otypes: 输出数据的类型
+
++ doc: 函数的注释（文档）
+
++ excluded: 输入参数的哪个函数不需要被向量化
+
+    ```python
+    def mypolyval(p, x):
+        _p = list(p)
+        res = _p.pop(0)
+        while _p:
+            res = res*x + _p.pop(0)
+        return res
+    vpolyval = np.vectorize(mypolyval, excluded=['p'])
+    vpolyval(p=[1, 2, 3], x=[0, 1])
+    # output: array([3, 6])
+    ```
+
++ signature: 输入参数的形状
+
+    例如一个矩阵乘一个向量：`(m,n),(n)->(m)`
+
+    ```python
+    convolve = np.vectorize(np.convolve, signature='(n),(m)->(k)')
+    convolve(np.eye(4), [1, 2, 1])
+    '''
+    output:
+    array([[1., 2., 1., 0., 0., 0.],
+           [0., 1., 2., 1., 0., 0.],
+           [0., 0., 1., 2., 1., 0.],
+           [0., 0., 0., 1., 2., 1.]])
+    '''
+    ```
+
+    
+
 ## SciPy 用法积累
 
 ### 卷积
