@@ -459,6 +459,12 @@ mode为填充的模式：
 
 d0, d1, d2为生成数据的维度。
 
+### 生成随机整数
+
+`np.random.randint(low, high)`
+
+生成 $[low, high)$ 的随机整数
+
 ### 标准差
 
 `numpy.std(a, axis=None, dtype=None, out=None, ddof=0, keepdims=<no value>, *, where=<no value>)`
