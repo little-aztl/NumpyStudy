@@ -411,6 +411,12 @@ svd分解：`np.linalg.svd(a)`返回三个矩阵u, s, v，大小分别为(M, M),
 
 ## 用法积累
 
+### 向量的范数
+
+`linalg.norm(x, ord=None, axis=None, keepdims=False)`
+
++ ord：第几范数，默认是欧氏长度
+
 ###  allclose
 
 `np.allclose(a, b， rtol=1e-05, atol=1e-08)`判断两个数组是否相等，rtol相对误差，atol绝对误差。
@@ -463,7 +469,11 @@ d0, d1, d2为生成数据的维度。
 
 `np.random.randint(low, high)`
 
-生成 $[low, high)$ 的随机整数
+生成 $[low, high]$ 的随机整数
+
+`random.random_integers(low, high=None, size=None)`
+
+生成随机整数数组
 
 ### 标准差
 
